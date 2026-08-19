@@ -35,9 +35,9 @@ def strassen(A,B,n):
     return C
 def main():
     try:
-        n=int(input("Enter size of matrix: "))
-        if n<2 or (n&(n-1))!=0:
-            raise ValueError("Size must be a power of 2.")
+        n=int(input("Enter matrix size: "))
+        if n<2:
+            raise ValueError("Matrix size must be at least 2.")
         print("Enter Matrix A:")
         A=[]
         for i in range(n):
@@ -52,8 +52,14 @@ def main():
             if len(row)!=n:
                 raise ValueError(f"Row {i+1} must contain {n} elements.")
             B.append(list(map(int,row)))
-        C=strassen(A,B,n)
-        print("Result Matrix:")
+        size=2
+        while size<n:
+            size*=2
+        A=[r+[0]*(size-n) for r in A]+[[0]*size for _ in range(size-n)]
+        B=[r+[0]*(size-n) for r in B]+[[0]*size for _ in range(size-n)]
+        C=strassen(A,B,size)
+        C=[r[:n] for r in C[:n]]
+        print("Strassen Matrix Multiplication:")
         for row in C:
             print(*row)
     except ValueError as e:
