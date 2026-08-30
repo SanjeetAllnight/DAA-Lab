@@ -6,7 +6,20 @@ def sub(A,B):
     return [[A[i][j]-B[i][j] for j in range(n)] for i in range(n)]
 def strassen(A,B,n):
     if n==2:
-        return [[A[0][0]*B[0][0]+A[0][1]*B[1][0],A[0][0]*B[0][1]+A[0][1]*B[1][1]],[A[1][0]*B[0][0]+A[1][1]*B[1][0],A[1][0]*B[0][1]+A[1][1]*B[1][1]]]
+        A11,A12,A21,A22=A[0][0],A[0][1],A[1][0],A[1][1]
+        B11,B12,B21,B22=B[0][0],B[0][1],B[1][0],B[1][1]
+        P=(A11+A22)*(B11+B22)
+        Q=(A21+A22)*B11
+        R=A11*(B12-B22)
+        S=A22*(B21-B11)
+        T=(A11+A12)*B22
+        U=(A21-A11)*(B11+B12)
+        V=(A12-A22)*(B21+B22)
+        C11=P+S-T+V
+        C12=R+T
+        C21=Q+S
+        C22=P+R-Q+U
+        return [[C11,C12],[C21,C22]]
     mid=n//2
     A11=[r[:mid] for r in A[:mid]]
     A12=[r[mid:] for r in A[:mid]]
