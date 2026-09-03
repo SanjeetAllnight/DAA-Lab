@@ -13,7 +13,7 @@ def Prim(E,cost,n,t):
         else:
             near[i]=k
     near[k]=near[l]=0
-    print_step(1,k,l,mincost,cost[k][l],near,n)
+    print_step(1,k,l,mincost,cost[k][l],near,t,n)
     for i in range(2,n):
         j=0
         for k in range(1,n+1):
@@ -23,14 +23,20 @@ def Prim(E,cost,n,t):
         t[i][1]=j
         t[i][2]=near[j]
         mincost=mincost+cost[j][near[j]]
-        print_step(i,j,near[j],mincost,cost[j][near[j]],near,n)
+        edge_cost=cost[j][near[j]]
         near[j]=0
         for k in range(1,n+1):
             if near[k]!=0 and cost[k][near[k]]>cost[k][j]:
                 near[k]=j
+        print_step(i,j,t[i][2],mincost,edge_cost,near,t,n)
     return mincost
-def print_step(i,j,k,mincost,c,near,n):
+def print_step(i,j,k,mincost,c,near,t,n):
     print("\nStep",i)
+    print("Added Edge =",f"({j},{k})")
+    print("MST Edges =",end=" ")
+    for x in range(1,i+1):
+        print(f"({t[x][1]},{t[x][2]})",end=" ")
+    print()
     print("i =",j,"j =",k)
     print("minCost =",mincost)
     print(f"Cost[{j},{k}] =",c)
@@ -50,28 +56,25 @@ def main():
                 if row[j-1].upper()=="INF":
                     cost[i][j]=float("inf")
                 else:
-                    cost[i][j]=float(row[j-1])
+                    cost[i][j]=int(row[j-1])
                 if i==j and cost[i][j]!=float("inf"):
                     raise ValueError("Diagonal elements must be INF.")
                 if i!=j and cost[i][j]!=float("inf") and cost[i][j]<=0:
                     raise ValueError("Edge costs must be positive.")
+        for i in range(1,n+1):
+            for j in range(i+1,n+1):
+                if cost[i][j]!=cost[j][i]:
+                    raise ValueError("Cost matrix must be symmetric.")
         E=[]
         for i in range(1,n+1):
             for j in range(i+1,n+1):
                 if cost[i][j]!=float("inf"):
                     E.append((i,j))
-        if len(E)<n-1:
-            raise ValueError("Graph does not have enough edges for a spanning tree.")
-        for i in range(1,n+1):
-            for j in range(i+1,n+1):
-                if cost[i][j]!=cost[j][i]:
-                    raise ValueError("Cost matrix must be symmetric.")
+        if not E:
+            raise ValueError("Graph must contain at least one edge.")
         t=[[0,0,0] for _ in range(n)]
         mincost=Prim(E,cost,n,t)
-        print("\nMST Edges:")
-        for i in range(1,n):
-            print(f"({t[i][1]},{t[i][2]})")
-        print("Minimum Cost =",mincost)
+        print("\nMinimum Cost =",mincost)
     except ValueError as e:
         print("Error:",e)
 if __name__=="__main__":
