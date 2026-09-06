@@ -10,8 +10,14 @@ def maxmin(i,j,max,min):
         mid=(i+j)//2
         max1,min1=maxmin(i,mid,max,min)
         max2,min2=maxmin(mid+1,j,max,min)
-        mx=max(max1,max2)
-        mn=min(min1,min2)
+        if max1>max2:
+            mx=max1
+        else:
+            mx=max2
+        if min1<min2:
+            mn=min1
+        else:
+            mn=min2
     print(i+1,"\t",j+1,"\t",mn,"\t",mx)
     return mx,mn
 def main():
