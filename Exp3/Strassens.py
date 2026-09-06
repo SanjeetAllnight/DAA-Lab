@@ -77,5 +77,4 @@ def main():
             print(*row)
     except ValueError as e:
         print("Error:",e)
-if __name__=="__main__":
-    main()
+main()
