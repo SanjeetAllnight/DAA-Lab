@@ -7,11 +7,11 @@ def partition(a,m,p):
     while True:
         while True:
             i+=1
-            if a[i]<=v:
+            if a[i]>=v:
                 break
         while True:
             j-=1
-            if a[j]>=v:
+            if a[j]<=v:
                 break
         if i<j:
             interchange(a,i,j)
@@ -35,10 +35,9 @@ def main():
         values=input("Enter elements: ").split()
         if len(values)!=n:
             raise ValueError("Number of elements entered does not match n.")
-        arr=[0]+[int(x) for x in values]+[float("-inf")]
+        arr=[0]+[int(x) for x in values]+[float("inf")]
         quickSort(1,n)
         print("Sorted array:",arr[1:n+1])
     except ValueError as e:
         print("Error:",e)
-if __name__=="__main__":
-    main()
+main()
