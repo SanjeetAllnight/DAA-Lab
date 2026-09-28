@@ -45,9 +45,14 @@ def Kruskal(E,cost,n,t):
             t[i][1],t[i][2]=u,v
             mincost+=cost[u][v]
             Union(j,k,parent)
-            print("Step",i,":",f"({u},{v})","Cost =",cost[u][v],"MinCost =",mincost)
+            print("\nStep",i)
+            print("t =",end=" ")
+            for q in range(1,i+1):
+                print(f"({t[q][1]},{t[q][2]})",end=" ")
+            print()
+            print("minCost =",mincost)
     if i!=n-1:
-        print("No spanning tree")
+        print("\nNo spanning tree")
     return mincost
 def main():
     try:
@@ -67,9 +72,6 @@ def main():
         t=[[0,0,0] for _ in range(n)]
         mincost=Kruskal(E,cost,n,t)
         if mincost:
-            print("MST Edges:",end=" ")
-            for i in range(1,n):
-                print(f"({t[i][1]},{t[i][2]})",end=" ")
             print("\nMinimum Cost =",mincost)
     except ValueError as e:
         print("Error:",e)
