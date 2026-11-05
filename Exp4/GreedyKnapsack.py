@@ -27,33 +27,37 @@ def original_x():
     return ans[1:]
 def fraction_x(arr):
     return [str(Fraction(v).limit_denominator()) for v in arr]
-n=int(input("Enter n: "))
-m=float(input("Enter capacity: "))
-profits=list(map(float,input("Enter profits: ").split()))
-weights=list(map(float,input("Enter weights: ").split()))
-if len(profits)!=n or len(weights)!=n:
-    raise ValueError("Number of profits and weights must match n.")
-wp=[[0,0,0]]
-for i in range(n):
-    wp.append([weights[i],profits[i],i+1])
-x=[0]*(n+1)
-result=[]
-for i in range(1,n+1):
-    x[i]=1/(i+1)
-wt,profit=printing()
-result.append(["Initial",wt,profit,fraction_x(x[1:])])
-wp=[[0,0,0]]+sorted(wp[1:],key=lambda w:w[0])
-greedy(m,n)
-wt,profit=printing()
-result.append(["Weight",wt,profit,fraction_x(original_x())])
-wp=[[0,0,0]]+sorted(wp[1:],key=lambda w:w[1],reverse=True)
-greedy(m,n)
-wt,profit=printing()
-result.append(["Profit",wt,profit,fraction_x(original_x())])
-wp=[[0,0,0]]+sorted(wp[1:],key=lambda w:w[1]/w[0],reverse=True)
-greedy(m,n)
-wt,profit=printing()
-result.append(["Profit/Weight",wt,profit,fraction_x(original_x())])
-for row in result:
-    row[3]="\n".join(wrap(str(row[3])))
-print(tabulate(result,headers=["Method","t wt","t profit","x"],tablefmt="grid"))
+if __name__ == "__main__":
+    n = int(input("Enter number of items (n): "))
+    m = float(input("Enter knapsack capacity (m): "))
+    weights = list(map(float, input(f"Enter {n} weights : ").split()))
+    profits = list(map(float, input(f"Enter {n} profits : ").split()))
+    if len(weights) != n or len(profits) != n:
+        print("Error: number of weights/profits must equal n.")
+        exit(1)
+    wp = [[0, 0, 0]] + [[weights[i], profits[i], i + 1] for i in range(n)]
+    x=[0]*(n+1)
+    result=[]
+    for i in range(1,n+1):
+        x[i]=1/(i+1)
+    wt,profit=printing()
+    result.append(["Fractions",wt,profit,fraction_x(x[1:])])
+    wp=[[0,0,0]]+sorted(wp[1:],key=lambda w:w[0])
+    greedy(m,n)
+    wt,profit=printing()
+    result.append(["Min Weight",wt,profit,fraction_x(original_x())])
+    wp=[[0,0,0]]+sorted(wp[1:],key=lambda w:w[1],reverse=True)
+    greedy(m,n)
+    wt,profit=printing()
+    result.append(["Max Profit",wt,profit,fraction_x(original_x())])
+    wp=[[0,0,0]]+sorted(wp[1:],key=lambda w:w[1]/w[0],reverse=True)
+    greedy(m,n)
+    wt,profit=printing()
+    result.append(["Profit/Weight",wt,profit,fraction_x(original_x())])
+    for row in result:
+        row[3]="\n".join(wrap(str(row[3])))
+    print(tabulate(
+        result,headers=["Method","Total Weight","Total Profit",
+                        "Solution Vector"],
+        tablefmt="grid")
+    )
