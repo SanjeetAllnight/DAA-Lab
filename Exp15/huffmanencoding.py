@@ -1,47 +1,20 @@
-import heapq
-
-class Node:
-    def __init__(self, ch, freq):
-        self.ch = ch
-        self.freq = freq
-        self.left = None
-        self.right = None
-
 def Huffman(x):
-    f = {}
-
-    for c in x:
-        f[c] = f.get(c, 0) + 1
-
-    Q = []
-
-    for c in f:
-        heapq.heappush(Q, (f[c], c, Node(c, f[c])))
-
+    freq = {}
+    for ch in x:
+        freq[ch] = freq.get(ch, 0) + 1
+    Q = [[f, ch, None, None] for ch, f in freq.items()]
     while len(Q) > 1:
-        f1, c1, T1 = heapq.heappop(Q)
-        f2, c2, T2 = heapq.heappop(Q)
-
-        T = Node(c1 + c2, f1 + f2)
-        T.left = T1
-        T.right = T2
-
-        heapq.heappush(Q, (T.freq, T.ch, T))
-
-    return Q[0][2]
-
-def printCodes(root, code=""):
-    if root.left is None and root.right is None:
-        print(root.ch, ":", code)
-        return
-
-    printCodes(root.left, code + "0")
-    printCodes(root.right, code + "1")
-
-
-x = input("Enter string: ")
-
-root = Huffman(x)
-
-print("Huffman Codes:")
-printCodes(root)
+        Q.sort(key=lambda T: T[0])
+        T1 = Q.pop(0)
+        T2 = Q.pop(0)
+        T = [T1[0] + T2[0], None, T1, T2]
+        Q.append(T)
+    def display(T, code=""):
+        if T[1] is not None:
+            print(repr(T[1]), ":", code if code else "0")
+        else:
+            display(T[2], code + "0")
+            display(T[3], code + "1")
+    display(Q[0])
+x = input("Enter sentence: ")
+Huffman(x)
