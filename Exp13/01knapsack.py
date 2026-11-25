@@ -8,8 +8,8 @@ def Bound(cp, cw, k, p, w, m):
             b = b + p[i]
         else:
             return b + (1 - (c - m) / w[i]) * p[i]
-
     return b
+
 def UBound(cp, cw, k, p, w, m):
     b = cp
     c = cw
@@ -18,6 +18,7 @@ def UBound(cp, cw, k, p, w, m):
             c = c + w[i]
             b = b + p[i]
     return b
+
 def knapsack(p, w, m):
     n = len(p)
     items = sorted(
@@ -30,8 +31,7 @@ def knapsack(p, w, m):
     best_profit = 0
     best_items = []
     pq = []
-    heapq.heappush(pq, (-Bound(0, 0, -1, p, w, m),
-                        0, 0, -1, []))
+    heapq.heappush(pq, (-Bound(0, 0, -1, p, w, m),0, 0, -1, []))
     while pq:
         neg_bound, cp, cw, k, selected = heapq.heappop(pq)
         if -neg_bound <= best_profit:
@@ -39,7 +39,6 @@ def knapsack(p, w, m):
         if k == n - 1:
             continue
         i = k + 1
-        # Include the next item
         if cw + w[i] <= m:
             new_cp = cp + p[i]
             new_cw = cw + w[i]
@@ -50,16 +49,11 @@ def knapsack(p, w, m):
             ub = UBound(new_cp, new_cw, i, p, w, m)
             if ub > best_profit:
                 b = Bound(new_cp, new_cw, i, p, w, m)
-                heapq.heappush(
-                    pq, (-b, new_cp, new_cw, i, new_selected)
-                )
-        # Exclude the next item
+                heapq.heappush(pq, (-b, new_cp, new_cw, i, new_selected))
         ub = UBound(cp, cw, i, p, w, m)
         if ub > best_profit:
             b = Bound(cp, cw, i, p, w, m)
-            heapq.heappush(
-                pq, (-b, cp, cw, i, selected)
-            )
+            heapq.heappush(pq, (-b, cp, cw, i, selected))
     print("\nMaximum Profit:", best_profit)
     print("Selected Items:", best_items)
 n = int(input("Enter number of objects: "))
